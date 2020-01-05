@@ -1,0 +1,16 @@
+/**To Run Anular User Portal Proj**/
+ng serve userPortal
+
+http://localhost:4201
+
+
+register
+curl -s -X POST http://localhost:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=gunjpatil@gmail.com&orgName=Org1&password=suvitp&status=InActive'
+
+
+verify pin
+ curl -s -X POST http://localhost:4000/verifyPin -H "content-type: application/x-www-form-urlencoded" -d 'username=suvit_patil88@rediffmail.com&pin=700862&password=suvitp'
+
+
+check while login
+curl -s -X POST http://localhost:4000/userLogin -H "content-type: application/x-www-form-urlencoded" -d 'username=suvit_patil88@rediffmail.com&password=suvitp&orgName=Org1'
