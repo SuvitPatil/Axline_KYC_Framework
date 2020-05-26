@@ -38,17 +38,20 @@ var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn,
 			fcn: fcn,
 			args: args
 		};
+		logger.info("Query chaincode request>>>>>>>>>>"+request.args)
 		let response_payloads = await channel.queryByChaincode(request);
+		logger.info("after   Query chaincode request>>>>> >>>>>"+response_payloads)
 		if (response_payloads) {
 			for (let i = 0; i < response_payloads.length; i++) {
 				logger.info(args[0]+' now has ' + response_payloads[i].toString('utf8') +
 					' after the move');
 			}
-			return args[0]+' now has ' + response_payloads[0].toString('utf8') +
-				' after the move';
+			let res = JSON.parse(response_payloads[0].toString('utf8'))
+			// 	' after the move';
+			return {"success":true, "message":res}
 		} else {
 			logger.error('response_payloads is null');
-			return 'response_payloads is null';
+			return {"success":false, "message":"response_payloads is null"};
 		}
 	} catch(error) {
 		logger.error('Failed to query due to error: ' + error.stack ? error.stack : error);

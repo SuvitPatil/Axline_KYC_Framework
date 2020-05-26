@@ -17,9 +17,18 @@
 var log4js = require('log4js');
 var logger = log4js.getLogger('Helper');
 logger.setLevel('DEBUG');
+const fs = require('fs');
+const crypto = require('crypto');
+var forge = require('node-forge');
+//var imageHash = require('node-image-hash');
+const md5File = require('md5-file')
+var request = require("request");
 
 var path = require('path');
 var util = require('util');
+
+const { promisify } = require('util')
+
 
 var nodemailer = require('nodemailer');
 
@@ -27,6 +36,19 @@ var hfc = require('fabric-client');
 //var CDB = require('felix-couchdb')
 var dbname = "user_details"
 //const nano = require('nano')('http://localhost:5984');
+let host = hfc.getConfigSetting('couchDBHost')
+let port = hfc.getConfigSetting('couchDBPort')
+let baseUrl = "http://"+host+":"+port
+
+var user = {
+	name: {
+		kycID: "",
+		email: "",
+		status: "",
+		password: "",
+		pin: ""
+	}
+}
 
 hfc.setLogger(logger);
 
@@ -162,6 +184,7 @@ var getLogger = function(moduleName) {
 };
 
 var checkRegisteredUser = async function (userorg, username, password) {
+	try {
 	logger.debug('getClientForOrg - ****** START %s %s', userorg, username)
 	// get a fabric client loaded with a connection profile for this org
 	let config = '-connection-profile-path';
@@ -173,27 +196,50 @@ var checkRegisteredUser = async function (userorg, username, password) {
 	// this will create both the state store and the crypto store based
 	// on the settings in the client section of the connection profile
 	await client.initCredentialStores();
-
+	global.kycId = ""
 	if(username) {
-		let user = await client.getUserContext(username, true);
+		let users = await client.getUserContext(username, true);
 		const dbcon = await dbConnection()
 		var doc = await dbcon.get(username)
 
-		if(user && user.isEnrolled() && doc.name.password == password) {
+		if(users && users.isEnrolled() && doc.name.password == password) {
 			logger.info('User %s was found to be registered and enrolled', username);
-			//if (isJson && isJson === true) {
-				var response = {
-					success: true,
-					message: username + ' login Successfull',
-				};
-				return response;
-			//}
+			
+			//await dbcon.get(username, function(err, doc){
+				if (doc.name.kycID == "") {
+					kycId = Math.floor(Math.random() * 10000000) + 1;
+					user.name.kycID = kycId
+					user.name.email = doc.name.email
+					user.name.status = doc.name.status
+					user.name.password = doc.name.password
+					user.name.pin = doc.name.pin
+					console.log("updaating kycID----")
+					let getDoc = update(user, username, function(err, res){
+						if (err) return console.log('No update!');
+						console.log('Updated kycID!');
+					})
+				} else {
+					console.log("In else---")
+					kycId = doc.name.kycID
+				}
+				
+		   // })
+			var response = {
+				success: true,				
+				message: username + ' login Successfull',
+				kycID: kycId
+			};
+			return response;
 		} else {
 			//throw new Error('User was not enrolled ');
-			return 'User '+username+' was not enrolled.. '
+			return 'User / Password not found.. '
 			
 		}	
 	}
+}catch(error) {
+	logger.error('Failed to get registered user: %s with error: %s', username, error.toString());
+	return 'failed '+error.toString();
+}
 }
 var update = async function(obj, key, callback) {
 	const db = await dbConnection()
@@ -209,21 +255,18 @@ var update = async function(obj, key, callback) {
 var sendMailVerification = async function(emailId, password, status) {
 	try{
 		//var emailId = req.body.emailId;
-		var password = "Suvitp@5588";
+		var passwords = "Suvitp@5588";
 		
 		logger.debug('End point : /sendMailVerification');
 		logger.debug('User email : ' + emailId);
 		let randNumber = Math.floor(Math.random() * 1000000) + 1;
 
 		//let dbConn = await dbConnection()
-		var user = {
-			name: {
-				email: emailId,
-				status: status,
-				password: password,
-				pin: randNumber
-			}
-		}
+		user.name.email = emailId
+		user.name.status = status
+		user.name.password = password
+		user.name.pin = randNumber
+		
 		let getDoc = await update(user, emailId, function(err, res){
 			if (err) return console.log('No update!');
 			console.log('Updated!');
@@ -233,7 +276,7 @@ var sendMailVerification = async function(emailId, password, status) {
 			service: 'gmail',
 			auth: {
 			user: 'suvitpatil5588@gmail.com',
-			pass: password
+			pass: passwords
 			}
 		});
 		
@@ -255,23 +298,26 @@ var sendMailVerification = async function(emailId, password, status) {
 			}
 		});
 	}catch(error) {
-		logger.error('Failed to send mail: %s with error: %s', username, error.toString());
+		logger.error('Failed to send mail: %s with error: %s', emailId, error.toString());
 		return 'failed '+error.toString();
 	}
 }
+// var dbConfig = async function() {
+// 	let host = hfc.getConfigSetting('couchDBHost')
+// 	let port = hfc.getConfigSetting('couchDBPort')
+// 	let baseUrl = "http://"+host+":"+port
+// 	logger.info("In dbconnection funct: "+baseUrl)
+// 	//var clientDB = CDB.createClient(port, host)
 
+// 	//const nano = require('nano')('http://localhost:5984');
+// 	const nano = require('nano')(baseUrl);
+// 	return nano
+// }
 var dbConnection = async function() {
 	
-	let host = hfc.getConfigSetting('couchDBHost')
-	let port = hfc.getConfigSetting('couchDBPort')
-	let baseUrl = "http://"+host+":"+port
-	logger.info("In dbconnection funct: "+baseUrl)
-	//var clientDB = CDB.createClient(port, host)
-
-	//const nano = require('nano')('http://localhost:5984');
-	const nano = require('nano')(baseUrl);
+	const nanoCon = require('nano')(baseUrl);
 	var flag = false
-	await nano.db.list().then((body) => {
+	await nanoCon.db.list().then((body) => {
 		// body is an array
 		body.forEach(function(db) {
 		  if(db == dbname){			
@@ -281,24 +327,21 @@ var dbConnection = async function() {
 		  })
 	  });
 	  if(await !flag){
-		nano.db.create(dbname)
+		nanoCon.db.create(dbname)
 	  }
-	const dbcon = nano.use(dbname)
+	const dbcon = nanoCon.use(dbname)
 	return dbcon
 	
 }
 
 var saveUserStatus = async function (username, status, password) {
 	logger.info("In save user.....")
-	var user = {
-		name: {
-			email: username,
-			status: status,
-			password: password,
-			pin: ""
-		}
-	}
 	
+	user.name.email = username
+	user.name.status = status
+	user.name.password = password
+	
+
 	const dbcon = await dbConnection()
 	logger.info("dbconn "+dbname+" "+username)
 	let getDoc = await dbcon.get(username, function(err, doc){
@@ -311,51 +354,269 @@ var saveUserStatus = async function (username, status, password) {
 } 
 
 var verifyPin = async function(username, pin, password) {
-	global.flag = false
+	try {
+		//const dbcon = await dbConnection()
+		var response = {
+			success: "",
+			message: ""
+		};
+		var options = { 
+			method: 'GET',
+			url: baseUrl+'/'+dbname+'/'+username,
+			headers: 
+			{ 
+			'Cache-Control': 'no-cache' 
+			} 
+		};
+	
+		return new Promise(function (resolve, reject) {
+			request(options, function (error, response1, body) {
+					let doc = JSON.parse(body)
+					console.log("doc---"+doc)
+					if (typeof doc.name === 'undefined') {
+						console.log("ueeeeeee")
+						response.success = false
+						response.message = "username not found.."
+						resolve(response)
+					} else if(doc.name.pin == pin) {			
+						user.name.email = username
+						user.name.status = "Active"
+						user.name.password = password
+						user.name.pin = pin
+
+						//global.flag = true
+						update(user, username, function(err, res){
+							if(!err) {
+								response.success = true
+								response.message = "Pin matched successfully.."
+								resolve(response)
+							}
+						})
+					} else {
+						response.success = false
+						response.message = "Pin not matched.."
+						resolve(response)
+					}
+
+				
+				
+			});
+	
+	
+			
+		})
+	
+	} catch(error) {
+		logger.error('Failed to check pin for user: %s with error: %s', username, error.toString());
+		response.success = false
+		response.message = error.toString()
+		return response
+	}
+}
+
+var insertAttachmentAndGenHash = async function(doc, username, attachName, dbcon) {
+	try{
+		var response = {
+			success: "",
+			message: ""
+		};
 		
-	const dbcon = await dbConnection()
-	var doc = await dbcon.get(username)//, function(err, doc){
-		if(doc.name.pin == pin){
-			var user = {
-				name: {
-					email: username,
-					status: "Active",
-					password: password,
-					pin: pin
-				}
-			}
-			global.flag = true
-			await update(user, username)//), function(err, res){
+		let filename = './images/'+attachName
+		var fileExtension = attachName.split(".").pop()
+		
+		global.flag = false
+		var rev = doc._rev
+
+		const readFileAsync = promisify(fs.readFile)
+		const resp = await readFileAsync(filename)
+		
+		let resp1 = await dbcon.attachment.insert(username, attachName, resp, 'image/'+fileExtension,
+			{ rev: rev }).then((body) => {
+			console.log(body);			  
+			global.flag = body.ok
+			console.log("-------------"+flag)
+
+		});
+		//process.chdir('../')
+		if (flag){
+			let hashFile = await getAttachmentHashCouch(username, attachName)
+			//hashFile = md5File.sync(filename)
+		  	console.log("hash-------------------"+hashFile)
+			response.success = flag
+			response.message = hashFile
+			return response
+		} else {
+			response.success = false
+			response.message = "Failed to insert attachment in database.."
+			return response
 		}
-	// 			if (res1) {
-	// 				logger.info("Pin Matched")
-	// 				// var response = {
-	// 				// 	success: true,
-	// 				// 	message: username + ' : Pin match..',
-	// 				// };
-	// 				global.flag = true
-	// 				logger.info("In helper response: ")//+response.message)
-	// 				//return response
-	// 			}else {
-	// 				logger.error(JSON.stringify(err))
-	// 				var response = {
-	// 					success: false,
-	// 					message: username +" : "+ err,
-	// 				};
-	// 				return response
-	// 			}
-	// 			//logger.info("updat helper"+flag)
-	// 		})
-	// 		//logger.info("if helper"+flag)
-	// 	}
-	// 	//logger.info("get helper"+flag)
-	// })
-	//if(await flag) {
-	//	logger.info("flag---"+await flag)
-		return await flag
-	//} else {
-	//	return "Pin not match.."
-	//}
+				
+	}catch(error) {
+		logger.error('Failed to insert hash for user: %s with error: %s', username, error.toString());
+		response.success = false
+		response.message = error.toString()
+		return response
+	}	
+}
+
+var addAttachmentProcess = async function(username, attachName) {
+	try {
+		const dbcon = await dbConnection()
+		let filename = './images/'+attachName
+		//var createdHash = ""
+		var doc = await dbcon.get(username)//, function(err, doc){
+		
+		let resp =  await insertAttachmentAndGenHash(doc, username, attachName, dbcon)//, function(err, data) {
+				
+		return resp
+	
+	}catch(error) {
+		logger.error('Error in Add Attachment: %s', username, error.toString());
+		return 'Error in Add Attachment: %s'+ username, error.toString()
+	}
+}
+
+var getAllAttachment = async function(username) {
+	try{
+		
+		
+		console.log("base---"+baseUrl)
+
+		var options = { 
+			method: 'GET',
+			url: baseUrl+'/'+dbname+'/'+username,
+			headers: 
+				{ 
+				'Cache-Control': 'no-cache',
+				Authorization: 'application/json' 
+				} 
+		};
+
+		return options
+		
+	}catch(error) {
+		logger.error('Error in Add Attachment: %s', username, error.toString());
+		return 'Error in Add Attachment: %s'+ username, error.toString()
+	}
+}
+var getAttachmentProcess = async function(username, attachName) {
+	try {
+		console.log("In get attachment --"+username+" --- "+attachName)
+		const dbcon = await dbConnection()
+		var response = {
+			success: "",
+			message: ""
+		};
+		let filename = attachName
+		
+		return new Promise(function (resolve, reject) {
+		dbcon.attachment.get(username, attachName, function(err,body) {
+			if(!err){
+			fs.writeFile('./downloadedImages/'+attachName, body)
+				console.log("success")
+				//global.flag = true
+				//console.log("in flag"+flag)	
+				// hashFile = md5File.sync('./downloadedImages/'+attachName)
+				// console.log("in flag"+hashFile)
+				response.success = true
+				response.message = "Document downloaded successfully"
+				resolve(response)
+			}
+			if(err){				
+				console.log("Error -----")
+				response.success = false
+				response.message = "Error in getting attachment.."
+				reject(response)
+			}
+		});
+		})
+
+	}catch(error) {
+		logger.error('Error in get Attachment: %s', username, error.toString());
+		response.success = false
+		response.message = error.toString()
+		return response
+	}
+}
+
+var getAttachmentHashBlockchain = async function(requestBody) {
+	try {
+		console.log("In getAttachmentHashBlockchain-----")
+		let channelName = requestBody.body.channelName
+		let userName = requestBody.body.userName
+		let attachName = requestBody.body.attachName
+		let chainCodeName = requestBody.body.chainCodeName
+		let peer = requestBody.body.peer
+		let args = requestBody.body.args
+		let token = requestBody.body.token
+		let	attachDesc= requestBody.body.attachDesc
+		
+		//console.log("reqJson---"+requestBody)
+		var options = { 
+			method: 'GET',
+			url: 'http://localhost:4000/channels/'+channelName+'/chaincodes/'+chainCodeName+'?peer='+peer+'&fcn=query&args=%5B%22'+args+'%22%5D',
+			headers: 
+			{ 
+				'authorization': 'Bearer '+token ,
+				'Cache-Control': 'no-cache' 
+			} 
+		};
+
+		return new Promise(function (resolve, reject) {
+			request(options, function (error, response1, body) {
+			  if (!error) {
+				if (attachDesc == "Passport") {
+					let obj = JSON.parse(body)
+					console.log("response3333333------body--"+obj.message.uploadPassport)
+					resolve(obj.message.uploadPassport);
+				} else {
+					let obj = JSON.parse(body)
+					console.log("response3333333------body--"+obj.message.uploadLicense)
+					resolve(obj.message.uploadLicense);
+				}
+			  } else {
+				reject(error);
+			  }
+			});
+		  });
+		
+	}catch(error) {
+		logger.error('Error in get Attachment: %s', error.toString());
+		
+		return "response"
+	}
+}
+
+var getAttachmentHashCouch = async function(username, attachName) {
+	try {
+		console.log("In getAttachmentHashCouch-----"+username+"skk"+attachName)
+		let filename = attachName
+		var options = { 
+			method: 'GET',
+			url: baseUrl+'/'+dbname+'/'+username+'/'+filename,
+			headers: 
+			{ 
+				'Cache-Control': 'no-cache' 
+			} 
+		};
+
+		return new Promise(function (resolve, reject) {
+			request(options, function (error, response1, body) {
+			  if (!error) {
+				console.log("response1.headers"+response1.headers["content-md5"])
+				resolve(response1.headers["content-md5"]);
+			  } else {
+				reject(error);
+			  }
+			});
+		  });
+	
+	}catch(error) {
+		logger.error('Error in get Attachment: %s', username, error.toString());
+		response.success = false
+		response.message = error
+		return response
+	}
 }
 
 exports.getClientForOrg = getClientForOrg;
@@ -366,3 +627,9 @@ exports.checkRegisteredUser = checkRegisteredUser
 exports.sendMailVerification = sendMailVerification
 exports.saveUserStatus = saveUserStatus
 exports.verifyPin = verifyPin
+exports.addAttachmentProcess = addAttachmentProcess
+exports.getAttachmentProcess = getAttachmentProcess
+exports.getAllAttachment = getAllAttachment
+exports.insertAttachmentAndGenHash = insertAttachmentAndGenHash
+exports.getAttachmentHashCouch = getAttachmentHashCouch
+exports.getAttachmentHashBlockchain = getAttachmentHashBlockchain

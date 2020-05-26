@@ -30,7 +30,10 @@
     "fs-extra": "^2.0.0",
     "jsonwebtoken": "^7.3.0",
     "log4js": "^0.6.38",
+    "md5-file": "^4.0.0",
     "nano": "^8.1.0",
+    "node-forge": "^0.9.1",
+    "node-image-hash": "^1.0.6",
     "nodemailer": "^6.4.0"
   }
 }

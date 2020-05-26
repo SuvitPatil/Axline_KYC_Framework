@@ -2,15 +2,102 @@
 ng serve userPortal
 
 http://localhost:4201
-
+http://localhost:5984/_utils/
 
 register
-curl -s -X POST http://localhost:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=gunjpatil@gmail.com&orgName=Org1&password=suvitp&status=InActive'
+curl -s -X POST http://localhost:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&orgName=Org1&password=suvitp&status=InActive'
+response:
+{"success":true,"secret":"suvitp","message":"gunjpatil@gmail.com enrolled Successfully","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODk2NjY0NjksInVzZXJuYW1lIjoiZ3VuanBhdGlsQGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTg5NjMwNDY5fQ.UBd_1N_TgumTKSGW-oU3c6Wje0rC187F1exhtS6PD2w"}
 
 
 verify pin
- curl -s -X POST http://localhost:4000/verifyPin -H "content-type: application/x-www-form-urlencoded" -d 'username=suvit_patil88@rediffmail.com&pin=700862&password=suvitp'
+ curl -s -X POST http://localhost:4000/verifyPin -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&pin=134132&password=suvitp'
+response:
+{"success":true,"message":"Pin match successfully"}
+{"success":false,"message":"Pin not match"}
 
 
 check while login
-curl -s -X POST http://localhost:4000/userLogin -H "content-type: application/x-www-form-urlencoded" -d 'username=suvit_patil88@rediffmail.com&password=suvitp&orgName=Org1'
+curl -s -X POST http://localhost:4000/userLogin -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&password=suvitp&orgName=Org1'
+response:
+{"success":true,"message":"suvpatil@rediffmail.com login Successfull","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODk3NTQ5NTEsInVzZXJuYW1lIjoic3V2aXRfcGF0aWxAcmVkaWZmbWFpbC5jb20iLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTU4OTcxODk1MX0.7j8ZZD2sJ4QrGEPA1OlYVXooNl7w1djnnvbrMNETKzk",
+"kycID":8299544}
+{"success":false,"message":"User suvpatil@rediffmail.com was not enrolled.. "}
+
+
+
+Add attachment to couchdb---- call this and then get the hash from addAttachment and call save customer
+curl -s -X POST http://localhost:4000/addAttachment -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&attachName=mario.png'
+response:
+{"success":true,"message":"6a6acefaf128f13fb14426c973cdeab7a59ff1f25bc8a586a6f24a4280101e4f"}
+{"success":false,"message":"Failed to insert attachment in database.."}
+Tip : File is uploaded from "images" folder which is in same location where the project is and then creates hash.
+
+
+
+get attachment
+
+curl -s -X POST http://localhost:4000/getAttachment -H "content-type: application/json" -d '{ "userName": "suvpatil@rediffmail.com", "attachName": "mario.png", "channelName": "mychannel", "chainCodeName": "mycc", "peer": "peer0.org1.example.com", "args": "8025924", "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk", "attachDesc": "License" }'
+
+
+curl -s -X POST http://localhost:4000/getAttachment -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&attachName=bmw'
+response
+{"success":true,"message":"6a6acefaf128f13fb14426c973cdeab7a59ff1f25bc8a586a6f24a4280101e4f"}
+{"success":false,"message":"Error in getting attachment.."}
+Tip :  file is downloaded to "downloadedImages" folder which is in same location where the project is.
+
+
+
+
+get all attachment
+curl -s -X POST http://localhost:4000/getAllAttachment -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com'
+response:
+{"success":true,"message":"{\"_id\":\"suvpatil@rediffmail.com\",\"_rev\":\"4-cd40da2a738fe00d4a2c290f536cfc1b\",\"name\":{\"email\":\"suvpatil@rediffmail.com\",\"status\":\"Active\",\"password\":\"suvitp\",\"pin\":\"\",\"hash\":\"\"},\"_attachments\":{\"xyz.jpg\":{\"content_type\":\"image/jpg\",\"revpos\":4,\"digest\":\"md5-l41tsEAAVZkAkSYPo6ARSg==\",\"length\":10035,\"stub\":true},\"bmw.jpg\":{\"content_type\":\"image/jpg\",\"revpos\":3,\"digest\":\"md5-it73Kp5liEeQd89XxohsHg==\",\"length\":13144,\"stub\":true}}}\n"}
+{"success":false,"message":"Error in getting attachment.."}
+
+
+
+
+save customer
+curl -s -X POST \
+  http://localhost:4000/channels/mychannel/chaincodes/mycc8 \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAyNTA1NDEsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMjE0NTQxfQ.hyQ9Wes0xN3J1XwSlAc3BpAROWlAAuWLSeeKkkH4iHg" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.org1.example.com","peer0.org2.example.com"],
+	"fcn":"saveCustomer",
+	"args":["{\"KycID\": \"288446\", \"Email\": \"suvpatil@rediffmail.com\", \"CustName\": \"Suvit\", \"FamilyName\": \"Patil\", \"CurrentResidentialAddress\": \"old sangvi\", \"PermanentResidentialAddress\": \"Pune\", \"MobileNo\": \"9011454898\", \"FaxNo\": \"Jim\", \"UploadPassport\": \"\", \"UploadLicense\": \"\"}"]
+}'
+response:
+{"success":true,"message":"Successfully invoked the chaincode Org1 to the channel 'mychannel' for transaction ID: c460b3a8793aab6862a0cb769b4236dd30b1df3e39380a4ead737494a413e1ee"}
+{"success":false,"message":"some measaage"}
+
+
+
+get customer
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/chaincodes/mycc8?peer=peer0.org1.example.com&fcn=query&args=%5B%22288446%22%5D" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAyODcxMzgsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMjUxMTM4fQ.ryxlGyvkJQXPesjrFDOMiriJuMAmTtRl3F4PLMa6nnM" \
+  -H "content-type: application/json"
+```
+Response:
+{"success":true,"message":{"currentResidentialAddress":"old sangvi","custName":"Suvit","docType":"customerDetails","email":"suvpatil@rediffmail.com","familyName":"Patil","faxNo":"Jim","kycId":"288446","mobileNo":"9011454898","permanentResidentialAddress":"Pune","uploadLicense":"","uploadPassport":""}}
+
+
+add attachment to blockchain
+curl -s -X POST \
+  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNDAyNTgsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzA0MjU4fQ.7gLJkznEyrA_nYp62XEprf31hw--_ntImXDbM30-pPI" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.org1.example.com","peer0.org2.example.com"],
+	"fcn":"addAttachment",
+	"args":["{\"KycID\": \"8025924\", \"AttachDesc\": \"License\", \"UploadHash\": \"zAGoyB47gezDlB80HFLEzg==\"}"]
+}'
+response:
+{"success":true,"message":"Successfully invoked the chaincode Org1 to the channel 'mychannel' for transaction ID: c460b3a8793aab6862a0cb769b4236dd30b1df3e39380a4ead737494a413e1ee"}
+{"success":false,"message":"some measaage"}
+
+
+one kycid as per username
+image update

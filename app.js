@@ -27,6 +27,7 @@ var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var bearerToken = require('express-bearer-token');
 var cors = require('cors');
+const md5File = require('md5-file')
 
 require('./config.js');
 var hfc = require('fabric-client');
@@ -57,13 +58,14 @@ app.set('secret', 'thisismysecret');
 app.use(expressJWT({
 	secret: 'thisismysecret'
 }).unless({
-	path: ['/users','/userLogin','/verifyPin']
+	path: ['/users','/userLogin','/verifyPin', '/addAttachment', '/getAttachment', '/getAllAttachment']
 }));
 app.use(bearerToken());
 app.use(function(req, res, next) {
 	logger.debug(' ------>>>>>> new request for %s',req.originalUrl);
 	if (req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/userLogin') >= 0
-		|| req.originalUrl.indexOf('/verifyPin') >= 0) {
+		|| req.originalUrl.indexOf('/verifyPin') >= 0 || req.originalUrl.indexOf('/addAttachment') >= 0
+		|| req.originalUrl.indexOf('/getAttachment') >= 0 || req.originalUrl.indexOf('/getAllAttachment') >= 0) {
 		return next();
 	}
 
@@ -181,12 +183,13 @@ app.post('/verifyPin', async function(req, res){
 	
 	
 		var resp = await helper.verifyPin(username, pin, password)
-		await logger.info("vpin...."+ resp)
-		if (resp) {
-			res.json({success: true, message: "Pin match successfully"})
-		} else {
-			res.json({success: false, message: "Pin not match"})
-		}
+		logger.info("vpin...."+ resp)
+		res.json(resp)
+		// if (resp.success) {
+		// 	res.json(resp)
+		// } else {
+		// 	res.json(resp)
+		// }
 			
 		
 	
@@ -198,7 +201,7 @@ app.post('/userLogin', async function(req, res) {
 	var username = req.body.username;
 	var orgName = req.body.orgName;
 	var password = req.body.password;
-	logger.debug('End point : /users');
+	logger.debug('End point : /usersLogin');
 	logger.debug('User name : ' + username);
 	logger.debug('Password : ' + password);
 	logger.debug('Org name  : ' + orgName);
@@ -210,22 +213,80 @@ app.post('/userLogin', async function(req, res) {
 		res.json(getErrorMessage('\'orgName\''));
 		return;
 	}
-	// var token = jwt.sign({
-	// 	exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
-	// 	username: username,
-	// 	orgName: orgName
-	// }, app.get('secret'));
+	var token = jwt.sign({
+		exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
+		username: username,
+		orgName: orgName
+	}, app.get('secret'));
 	let response = await helper.checkRegisteredUser(orgName, username, password);
 	logger.debug('-- returned from registering the username %s for organization %s',username,orgName);
 	if (response && typeof response !== 'string') {
 		//logger.debug('Successfully registered the username %s for organization %s',username,orgName);
-		//response.token = token;
+		response.token = token;
+		//response.kycID = Math.floor(Math.random() * 10000000) + 1;
+		response.username = username
 		res.json(response);
 	} else {
 		//logger.debug('Failed to register the username %s for organization %s with::%s',username,orgName,response);
 		res.json({success: false, message: response});
 	}
 
+});
+
+app.post('/addAttachment', async function(req, res) {
+	var username = req.body.username;
+	var attachName = req.body.attachName
+	var results = await helper.addAttachmentProcess(username, attachName)
+	logger.debug("results................."+results)
+	
+	res.json(results)
+});
+
+app.post('/getAttachment', async function(req, res) {
+	var username = req.body.userName;
+	var attachName = req.body.attachName
+	var resCouchDB = await helper.getAttachmentHashCouch(username, attachName)
+	console.log("results..."+req.body.channelName)
+	
+	var resBlockChain = await helper.getAttachmentHashBlockchain(req)	
+	console.log("resBlockChain..."+resBlockChain)
+
+	if (resBlockChain == resCouchDB) {
+		let resultDownload = await helper.getAttachmentProcess(username, attachName)
+		console.log("res end---------"+resultDownload.success)
+		if (resultDownload.success) {
+			//let hashFile = md5File.sync('./downloadedImages/'+attachName+'.jpg')
+			res.json(resultDownload)
+		} else {
+			res.json(resultDownload)
+		}
+	} else {
+		res.json({success: false, message: "Attachment hash not matched with blockchain.."})
+	}
+	//search error in results to return success false
+	
+	
+});
+
+app.post('/getAllAttachment', async function(req, res) {
+	var request = require("request");
+	var username = req.body.username;
+	var options = await helper.getAllAttachment(username)
+	console.log("results..."+options)
+
+	request(options, function (error, resp, body) {
+		if (error) res.json({success: false, message: "Error in getting attachment.."})
+		res.json({success: true, message: body})
+		});
+	// if (results) {
+	// 	//let hashFile = md5File.sync('./downloadedImages/'+attachName+'.jpg')
+	// 	res.json({success: true, message: results})
+	// } else {
+	// 	res.json({success: false, message: "Error in getting attachment.."})
+	// }
+	//search error in results to return success false
+	
+	
 });
 
 // Create Channel
