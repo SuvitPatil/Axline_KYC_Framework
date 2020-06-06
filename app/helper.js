@@ -46,7 +46,9 @@ var user = {
 		email: "",
 		status: "",
 		password: "",
-		pin: ""
+		pin: "",
+		passportDoc: "",
+		licenseDoc: ""
 	}
 }
 
@@ -374,7 +376,6 @@ var verifyPin = async function(username, pin, password) {
 					let doc = JSON.parse(body)
 					console.log("doc---"+doc)
 					if (typeof doc.name === 'undefined') {
-						console.log("ueeeeeee")
 						response.success = false
 						response.message = "username not found.."
 						resolve(response)
@@ -414,7 +415,7 @@ var verifyPin = async function(username, pin, password) {
 	}
 }
 
-var insertAttachmentAndGenHash = async function(doc, username, attachName, dbcon) {
+var insertAttachmentAndGenHash = async function(doc, username, attachName, dbcon, attachType) {
 	try{
 		var response = {
 			success: "",
@@ -439,6 +440,30 @@ var insertAttachmentAndGenHash = async function(doc, username, attachName, dbcon
 		});
 		//process.chdir('../')
 		if (flag){
+			var docWithAttachment = await dbcon.get(username)
+
+			user.name.kycID = docWithAttachment.name.kycID
+			user.name.email = docWithAttachment.name.email
+			user.name.status = docWithAttachment.name.status
+			user.name.password = docWithAttachment.name.password
+			user.name.pin = docWithAttachment.name.pin
+			user["_attachments"] = docWithAttachment["_attachments"]
+			console.log("attach----"+attachType)
+			if (attachType == "Passport") {
+				user.name.passportDoc = attachName
+			} else {
+				user.name.passportDoc = docWithAttachment.name.passportDoc
+			}
+			if (attachType == "License") {
+				user.name.licenseDoc = attachName
+			} else {
+				user.name.licenseDoc = docWithAttachment.name.licenseDoc
+			}
+
+			await update(user, username, function(err, res){
+				if (err) return console.log('No update!');
+				console.log('Updated Passport or license!');
+			})
 			let hashFile = await getAttachmentHashCouch(username, attachName)
 			//hashFile = md5File.sync(filename)
 		  	console.log("hash-------------------"+hashFile)
@@ -459,14 +484,14 @@ var insertAttachmentAndGenHash = async function(doc, username, attachName, dbcon
 	}	
 }
 
-var addAttachmentProcess = async function(username, attachName) {
+var addAttachmentProcess = async function(username, attachName, attachType) {
 	try {
 		const dbcon = await dbConnection()
 		let filename = './images/'+attachName
 		//var createdHash = ""
 		var doc = await dbcon.get(username)//, function(err, doc){
 		
-		let resp =  await insertAttachmentAndGenHash(doc, username, attachName, dbcon)//, function(err, data) {
+		let resp =  await insertAttachmentAndGenHash(doc, username, attachName, dbcon, attachType)//, function(err, data) {
 				
 		return resp
 	
@@ -492,7 +517,36 @@ var getAllAttachment = async function(username) {
 				} 
 		};
 
-		return options
+		return new Promise(function (resolve, reject) {
+			request(options, function (error, response1, body) {
+			  if (!error) {
+					console.log("Body ---"+body)
+					let obj = JSON.parse(body)
+					console.log("fiel name---"+obj["_attachments"]["abc.jpg"].content_type)
+					var keysObj = Object.keys(obj["_attachments"])
+					console.log("keysObj len -- "+keysObj)
+					var attachObj = []
+					for (var i = 0; i < keysObj.length; i++) {
+						console.log(keysObj[i]);
+						console.log("object--"+obj["_attachments"][keysObj[i]])
+						var attachJson = obj["_attachments"][keysObj[i]]
+						attachJson.uploadImage = keysObj[i]
+						if (obj.name.licenseDoc == keysObj[i]) {
+							attachJson.attachType = "License"
+						}
+						if (obj.name.passportDoc == keysObj[i]) {
+							attachJson.attachType = "Passport"
+						}
+						attachObj.push(attachJson)
+					}
+					
+					resolve(attachObj);
+				
+			  } else {
+				reject(error);
+			  }
+			});
+		  });
 		
 	}catch(error) {
 		logger.error('Error in Add Attachment: %s', username, error.toString());

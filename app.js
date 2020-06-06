@@ -236,7 +236,8 @@ app.post('/userLogin', async function(req, res) {
 app.post('/addAttachment', async function(req, res) {
 	var username = req.body.username;
 	var attachName = req.body.attachName
-	var results = await helper.addAttachmentProcess(username, attachName)
+	var attachType = req.body.attachType
+	var results = await helper.addAttachmentProcess(username, attachName, attachType)
 	logger.debug("results................."+results)
 	
 	res.json(results)
@@ -271,19 +272,19 @@ app.post('/getAttachment', async function(req, res) {
 app.post('/getAllAttachment', async function(req, res) {
 	var request = require("request");
 	var username = req.body.username;
-	var options = await helper.getAllAttachment(username)
-	console.log("results..."+options)
+	var results = await helper.getAllAttachment(username)
+	console.log("results..."+results)
 
-	request(options, function (error, resp, body) {
-		if (error) res.json({success: false, message: "Error in getting attachment.."})
-		res.json({success: true, message: body})
-		});
-	// if (results) {
-	// 	//let hashFile = md5File.sync('./downloadedImages/'+attachName+'.jpg')
-	// 	res.json({success: true, message: results})
-	// } else {
-	// 	res.json({success: false, message: "Error in getting attachment.."})
-	// }
+	// request(options, function (error, resp, body) {
+	// 	if (error) res.json({success: false, message: "Error in getting attachment.."})
+	// 	res.json({success: true, message: body})
+	// 	});
+	if (results) {
+		//let hashFile = md5File.sync('./downloadedImages/'+attachName+'.jpg')
+		res.json({success: true, message: results})
+	} else {
+		res.json({success: false, message: "Error in getting attachment.."})
+	}
 	//search error in results to return success false
 	
 	

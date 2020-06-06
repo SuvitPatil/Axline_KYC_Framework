@@ -5,29 +5,28 @@ http://localhost:4201
 http://localhost:5984/_utils/
 
 register
-curl -s -X POST http://localhost:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&orgName=Org1&password=suvitp&status=InActive'
+curl -s -X POST http://localhost:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=xyz_123@rediffmail.com&orgName=Org1&password=suvitp&status=InActive'
 response:
 {"success":true,"secret":"suvitp","message":"gunjpatil@gmail.com enrolled Successfully","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODk2NjY0NjksInVzZXJuYW1lIjoiZ3VuanBhdGlsQGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTg5NjMwNDY5fQ.UBd_1N_TgumTKSGW-oU3c6Wje0rC187F1exhtS6PD2w"}
 
 
 verify pin
- curl -s -X POST http://localhost:4000/verifyPin -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&pin=134132&password=suvitp'
+curl -s -X POST http://localhost:4000/verifyPin -H "content-type: application/x-www-form-urlencoded" -d 'username=xyz_123@rediffmail.com&pin=119442&password=suvitp'
 response:
 {"success":true,"message":"Pin match successfully"}
 {"success":false,"message":"Pin not match"}
 
 
 check while login
-curl -s -X POST http://localhost:4000/userLogin -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&password=suvitp&orgName=Org1'
+curl -s -X POST http://localhost:4000/userLogin -H "content-type: application/x-www-form-urlencoded" -d 'username=xyz_123@rediffmail.com&password=suvitp&orgName=Org1'
 response:
-{"success":true,"message":"suvpatil@rediffmail.com login Successfull","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODk3NTQ5NTEsInVzZXJuYW1lIjoic3V2aXRfcGF0aWxAcmVkaWZmbWFpbC5jb20iLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTU4OTcxODk1MX0.7j8ZZD2sJ4QrGEPA1OlYVXooNl7w1djnnvbrMNETKzk",
-"kycID":8299544}
-{"success":false,"message":"User suvpatil@rediffmail.com was not enrolled.. "}
+{"success":true,"message":"xyz_123@rediffmail.com login Successfull","kycID":1168809,"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTE0NzEwMzUsInVzZXJuYW1lIjoieHl6XzEyM0ByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkxNDM1MDM1fQ.KwTzIdkHg5vpRQMJ_f1L_CI-Vjxvq0F0-TdZMDcV7Eo","username":"xyz_123@rediffmail.com"}
+{"success":false,"message":"User xyz_123@rediffmail.com was not enrolled.. "}
 
 
 
 Add attachment to couchdb---- call this and then get the hash from addAttachment and call save customer
-curl -s -X POST http://localhost:4000/addAttachment -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&attachName=mario.png'
+curl -s -X POST http://localhost:4000/addAttachment -H "content-type: application/x-www-form-urlencoded" -d 'username=xyz_123@rediffmail.com&attachName=mario.png&attachType=Passport'
 response:
 {"success":true,"message":"6a6acefaf128f13fb14426c973cdeab7a59ff1f25bc8a586a6f24a4280101e4f"}
 {"success":false,"message":"Failed to insert attachment in database.."}
@@ -37,10 +36,10 @@ Tip : File is uploaded from "images" folder which is in same location where the 
 
 get attachment
 
-curl -s -X POST http://localhost:4000/getAttachment -H "content-type: application/json" -d '{ "userName": "suvpatil@rediffmail.com", "attachName": "mario.png", "channelName": "mychannel", "chainCodeName": "mycc", "peer": "peer0.org1.example.com", "args": "8025924", "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk", "attachDesc": "License" }'
+curl -s -X POST http://localhost:4000/getAttachment -H "content-type: application/json" -d '{ "userName": "xyz_123@rediffmail.com", "attachName": "mario.png", "channelName": "mychannel", "chainCodeName": "mycc", "peer": "peer0.org1.example.com", "args": "8025924", "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk", "attachDesc": "License" }'
 
 
-curl -s -X POST http://localhost:4000/getAttachment -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com&attachName=bmw'
+curl -s -X POST http://localhost:4000/getAttachment -H "content-type: application/x-www-form-urlencoded" -d 'username=xyz_123@rediffmail.com&attachName=bmw'
 response
 {"success":true,"message":"6a6acefaf128f13fb14426c973cdeab7a59ff1f25bc8a586a6f24a4280101e4f"}
 {"success":false,"message":"Error in getting attachment.."}
@@ -50,9 +49,9 @@ Tip :  file is downloaded to "downloadedImages" folder which is in same location
 
 
 get all attachment
-curl -s -X POST http://localhost:4000/getAllAttachment -H "content-type: application/x-www-form-urlencoded" -d 'username=suvpatil@rediffmail.com'
+curl -s -X POST http://localhost:4000/getAllAttachment -H "content-type: application/x-www-form-urlencoded" -d 'username=xyz_123@rediffmail.com'
 response:
-{"success":true,"message":"{\"_id\":\"suvpatil@rediffmail.com\",\"_rev\":\"4-cd40da2a738fe00d4a2c290f536cfc1b\",\"name\":{\"email\":\"suvpatil@rediffmail.com\",\"status\":\"Active\",\"password\":\"suvitp\",\"pin\":\"\",\"hash\":\"\"},\"_attachments\":{\"xyz.jpg\":{\"content_type\":\"image/jpg\",\"revpos\":4,\"digest\":\"md5-l41tsEAAVZkAkSYPo6ARSg==\",\"length\":10035,\"stub\":true},\"bmw.jpg\":{\"content_type\":\"image/jpg\",\"revpos\":3,\"digest\":\"md5-it73Kp5liEeQd89XxohsHg==\",\"length\":13144,\"stub\":true}}}\n"}
+{"success":true,"message":"{\"_id\":\"xyz_123@rediffmail.com\",\"_rev\":\"4-cd40da2a738fe00d4a2c290f536cfc1b\",\"name\":{\"email\":\"xyz_123@rediffmail.com\",\"status\":\"Active\",\"password\":\"suvitp\",\"pin\":\"\",\"hash\":\"\"},\"_attachments\":{\"xyz.jpg\":{\"content_type\":\"image/jpg\",\"revpos\":4,\"digest\":\"md5-l41tsEAAVZkAkSYPo6ARSg==\",\"length\":10035,\"stub\":true},\"bmw.jpg\":{\"content_type\":\"image/jpg\",\"revpos\":3,\"digest\":\"md5-it73Kp5liEeQd89XxohsHg==\",\"length\":13144,\"stub\":true}}}\n"}
 {"success":false,"message":"Error in getting attachment.."}
 
 
@@ -66,7 +65,7 @@ curl -s -X POST \
   -d '{
 	"peers": ["peer0.org1.example.com","peer0.org2.example.com"],
 	"fcn":"saveCustomer",
-	"args":["{\"KycID\": \"288446\", \"Email\": \"suvpatil@rediffmail.com\", \"CustName\": \"Suvit\", \"FamilyName\": \"Patil\", \"CurrentResidentialAddress\": \"old sangvi\", \"PermanentResidentialAddress\": \"Pune\", \"MobileNo\": \"9011454898\", \"FaxNo\": \"Jim\", \"UploadPassport\": \"\", \"UploadLicense\": \"\"}"]
+	"args":["{\"KycID\": \"288446\", \"Email\": \"xyz_123@rediffmail.com\", \"CustName\": \"Suvit\", \"FamilyName\": \"Patil\", \"CurrentResidentialAddress\": \"old sangvi\", \"PermanentResidentialAddress\": \"Pune\", \"MobileNo\": \"9011454898\", \"FaxNo\": \"Jim\", \"UploadPassport\": \"\", \"UploadLicense\": \"\"}"]
 }'
 response:
 {"success":true,"message":"Successfully invoked the chaincode Org1 to the channel 'mychannel' for transaction ID: c460b3a8793aab6862a0cb769b4236dd30b1df3e39380a4ead737494a413e1ee"}
@@ -81,7 +80,7 @@ curl -s -X GET \
   -H "content-type: application/json"
 ```
 Response:
-{"success":true,"message":{"currentResidentialAddress":"old sangvi","custName":"Suvit","docType":"customerDetails","email":"suvpatil@rediffmail.com","familyName":"Patil","faxNo":"Jim","kycId":"288446","mobileNo":"9011454898","permanentResidentialAddress":"Pune","uploadLicense":"","uploadPassport":""}}
+{"success":true,"message":{"currentResidentialAddress":"old sangvi","custName":"Suvit","docType":"customerDetails","email":"xyz_123@rediffmail.com","familyName":"Patil","faxNo":"Jim","kycId":"288446","mobileNo":"9011454898","permanentResidentialAddress":"Pune","uploadLicense":"","uploadPassport":""}}
 
 
 add attachment to blockchain
