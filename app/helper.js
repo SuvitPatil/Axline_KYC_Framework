@@ -274,31 +274,31 @@ var sendMailVerification = async function(emailId, password, status) {
 			console.log('Updated!');
 		})
 		
-		var transporter = nodemailer.createTransport({
-			service: 'gmail',
-			auth: {
-			user: 'suvitpatil5588@gmail.com',
-			pass: passwords
-			}
-		});
+		// var transporter = nodemailer.createTransport({
+		// 	service: 'gmail',
+		// 	auth: {
+		// 	user: 'suvitpatil5588@gmail.com',
+		// 	pass: passwords
+		// 	}
+		// });
 		
-		var mailOptions = {
-			from: 'suvitpatil5588@gmail.com',
-			//to: 'gunjpatil@gmail.com',
-			to: emailId,
-			subject: 'Set Your Pin',
-			html: '<h1>Welcome</h1><p>'+randNumber+'</p>'
-		};
+		// var mailOptions = {
+		// 	from: 'suvitpatil5588@gmail.com',
+		// 	//to: 'gunjpatil@gmail.com',
+		// 	to: emailId,
+		// 	subject: 'Set Your Pin',
+		// 	html: '<h1>Welcome</h1><p>'+randNumber+'</p>'
+		// };
 
-		transporter.sendMail(mailOptions, function(error, info){
-			if (error) {
-			console.log(error);
-			return(error);
-			} else {
-			console.log('Email sent: ' + info.response);
-			return(info.response);
-			}
-		});
+		// transporter.sendMail(mailOptions, function(error, info){
+		// 	if (error) {
+		// 	console.log(error);
+		// 	return(error);
+		// 	} else {
+		// 	console.log('Email sent: ' + info.response);
+		// 	return(info.response);
+		// 	}
+		// });
 	}catch(error) {
 		logger.error('Failed to send mail: %s with error: %s', emailId, error.toString());
 		return 'failed '+error.toString();
@@ -422,7 +422,7 @@ var insertAttachmentAndGenHash = async function(doc, username, attachName, dbcon
 			message: ""
 		};
 		
-		let filename = './images/'+attachName
+		let filename = './uploads/'+attachName
 		var fileExtension = attachName.split(".").pop()
 		
 		global.flag = false
@@ -522,7 +522,6 @@ var getAllAttachment = async function(username) {
 			  if (!error) {
 					console.log("Body ---"+body)
 					let obj = JSON.parse(body)
-					console.log("fiel name---"+obj["_attachments"]["abc.jpg"].content_type)
 					var keysObj = Object.keys(obj["_attachments"])
 					console.log("keysObj len -- "+keysObj)
 					var attachObj = []
@@ -553,6 +552,10 @@ var getAllAttachment = async function(username) {
 		return 'Error in Add Attachment: %s'+ username, error.toString()
 	}
 }
+exports.downloadFile = (req, res) => {
+	let filename = req.params.filename;
+	res.download(uploadFolder + filename);  
+  }
 var getAttachmentProcess = async function(username, attachName) {
 	try {
 		console.log("In get attachment --"+username+" --- "+attachName)
@@ -568,12 +571,13 @@ var getAttachmentProcess = async function(username, attachName) {
 			if(!err){
 			fs.writeFile('./downloadedImages/'+attachName, body)
 				console.log("success")
+				var fullpath = __dirname + "/downloadedImages/" + attachName;
 				//global.flag = true
 				//console.log("in flag"+flag)	
 				// hashFile = md5File.sync('./downloadedImages/'+attachName)
 				// console.log("in flag"+hashFile)
 				response.success = true
-				response.message = "Document downloaded successfully"
+				response.message = fullpath
 				resolve(response)
 			}
 			if(err){				
@@ -605,7 +609,8 @@ var getAttachmentHashBlockchain = async function(requestBody) {
 		let token = requestBody.body.token
 		let	attachDesc= requestBody.body.attachDesc
 		
-		//console.log("reqJson---"+requestBody)
+		console.log("reqJson---"+requestBody.body.args)
+		console.log('http://localhost:4000/channels/'+channelName+'/chaincodes/'+chainCodeName+'?peer='+peer+'&fcn=query&args=%5B%22'+args+'%22%5D')
 		var options = { 
 			method: 'GET',
 			url: 'http://localhost:4000/channels/'+channelName+'/chaincodes/'+chainCodeName+'?peer='+peer+'&fcn=query&args=%5B%22'+args+'%22%5D',
@@ -619,6 +624,8 @@ var getAttachmentHashBlockchain = async function(requestBody) {
 		return new Promise(function (resolve, reject) {
 			request(options, function (error, response1, body) {
 			  if (!error) {
+				console.log("response3333333------body--"+body)
+
 				if (attachDesc == "Passport") {
 					let obj = JSON.parse(body)
 					console.log("response3333333------body--"+obj.message.uploadPassport)

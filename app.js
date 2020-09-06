@@ -28,6 +28,8 @@ var jwt = require('jsonwebtoken');
 var bearerToken = require('express-bearer-token');
 var cors = require('cors');
 const md5File = require('md5-file')
+var multer  = require('multer')
+//var upload = multer()
 
 require('./config.js');
 var hfc = require('fabric-client');
@@ -58,17 +60,18 @@ app.set('secret', 'thisismysecret');
 app.use(expressJWT({
 	secret: 'thisismysecret'
 }).unless({
-	path: ['/users','/userLogin','/verifyPin', '/addAttachment', '/getAttachment', '/getAllAttachment']
+	path: ['/users','/userLogin','/verifyPin', '/addAttachment', '/getAttachment', '/getAllAttachment', '/uploads', '/download']
 }));
 app.use(bearerToken());
 app.use(function(req, res, next) {
 	logger.debug(' ------>>>>>> new request for %s',req.originalUrl);
 	if (req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/userLogin') >= 0
 		|| req.originalUrl.indexOf('/verifyPin') >= 0 || req.originalUrl.indexOf('/addAttachment') >= 0
-		|| req.originalUrl.indexOf('/getAttachment') >= 0 || req.originalUrl.indexOf('/getAllAttachment') >= 0) {
+		|| req.originalUrl.indexOf('/getAttachment') >= 0 || req.originalUrl.indexOf('/getAllAttachment') >= 0
+		|| req.originalUrl.indexOf('/uploads') >= 0 || req.originalUrl.indexOf('/download') >= 0) {
 		return next();
 	}
-
+	
 	var token = req.token;
 	jwt.verify(token, app.get('secret'), function(err, decoded) {
 		if (err) {
@@ -233,7 +236,47 @@ app.post('/userLogin', async function(req, res) {
 
 });
 
-app.post('/addAttachment', async function(req, res) {
+// var storage = multer.diskStorage({
+//     destination: function(req, file, cb) {
+//         cb(null, './uploads');
+//      },
+//     filename: function (req, file, cb) {
+//         cb(null , file.originalname);
+//     }
+// });
+// var upload = multer({ storage: storage })
+// //app.post("/uploads", multer({dest: "./uploads/"}).single('attachName'), function (req, res) {
+// app.post('/uploads', upload.single('attachName'), async function (req, res) {
+//    // req.file is the name of your file in the form above, here 'uploaded_file'
+//    // req.body will hold the text fields, if there were any 
+//    try {
+// 		console.log("op--"+req.file.originalname)
+// 		var username = req.body.username;
+// 		console.log("username--"+username)
+// 		var attachName = req.file.originalname
+// 		var attachType = req.body.attachType
+// 		var results = await helper.addAttachmentProcess(username, attachName, attachType)
+// 		logger.debug("results................."+results)
+// 	//res.send({success: true, message: req.body.attachName});
+// 		res.json(results)
+// 	// if (!req.file) {
+// 	// 	console.log("No file is available!");
+// 	// 	return res.send({
+// 	// 	  success: false
+// 	// 	});
+	
+// 	//   } else {
+// 	// 	console.log('File is available!');
+// 	// 	return res.send({
+// 	// 	  success: true
+// 	// 	})
+// 	//   }
+//   }catch(err) {
+//     res.send(err);
+//   }
+//  });
+
+app.post('/uploads', async function(req, res) {
 	var username = req.body.username;
 	var attachName = req.body.attachName
 	var attachType = req.body.attachType
@@ -288,6 +331,14 @@ app.post('/getAllAttachment', async function(req, res) {
 	//search error in results to return success false
 	
 	
+});
+
+app.post('/download', async function(req, res) {
+	const uploadFolder = __dirname + '/uploads/';
+	let filename = req.body.filename;
+	logger.info("filename------"+uploadFolder + filename)
+	  res.sendFile(uploadFolder + filename);
+	  //res.json(uploadFolder + filename);
 });
 
 // Create Channel

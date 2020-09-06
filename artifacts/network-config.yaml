@@ -113,7 +113,7 @@ organizations:
     # this way. The SDK should allow applications to set the org admin identity via APIs, and only use
     # this route as an alternative when it exists.
     adminPrivateKey:
-      path: /home/suvit/goWork/fabric1.4/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/c53fd37e54931306daebc1e8bbc7efc89c9df8df8bce70c8ebb912b0840ed334_sk
+      path: /home/suvit/goWork/fabric1.4/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/8aaee5633e495c96acd39128cf2a55b907dc3ba9c507f8709acfe2e9277d2319_sk
     signedCert:
       path: /home/suvit/goWork/fabric1.4/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
 
@@ -129,7 +129,7 @@ organizations:
     certificateAuthorities:
       - ca-org2
     adminPrivateKey:
-      path: /home/suvit/goWork/fabric1.4/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/db2576bbcb8ce3c74c12862a36df617f6babe19a2ef6bce2f1f4d77880b32c3d_sk
+      path: /home/suvit/goWork/fabric1.4/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/0400822f8303057fdb6360162f0bc5219241bd92fc825e8899b3f1e99b8ac406_sk
     signedCert:
       path: /home/suvit/goWork/fabric1.4/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem
 
@@ -140,7 +140,7 @@ organizations:
     certificateAuthorities:
       - ca-org3
     adminPrivateKey:
-      path: /home/suvit/goWork/fabric1.4/fabric-samples/first-network/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore/a7801afdc958f93f59aa770e0fa98ae995bad05215577461abce9d0f3025e60b_sk
+      path: /home/suvit/goWork/fabric1.4/fabric-samples/first-network/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore/e3bc3e20ef1d86ed3af309c77aa00c752170161c306e8d52f9219c875f8304b8_sk
     signedCert:
       path: /home/suvit/goWork/fabric1.4/fabric-samples/first-network/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/signcerts/Admin@org3.example.com-cert.pem
 

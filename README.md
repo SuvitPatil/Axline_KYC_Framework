@@ -108,7 +108,7 @@ cd fabric-samples/balance-transfer
   "success": true,
   "secret": "RaxhMgevgJcm",
   "message": "Jim enrolled Successfully",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo"
 }
 ```
 
@@ -119,7 +119,7 @@ The response contains the success/failure status, an **enrollment Secret** and a
 ```
 curl -s -X POST \
   http://localhost:4000/channels \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json" \
   -d '{
 	"channelName":"mychannel",
@@ -134,7 +134,7 @@ Please note that the Header **authorization** must contain the JWT returned from
 ```
 curl -s -X POST \
   http://localhost:4000/channels/mychannel/peers \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org1.example.com"]
@@ -142,7 +142,7 @@ curl -s -X POST \
 
 curl -s -X POST \
   http://localhost:4000/channels/mychannel/peers \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNjAwNzQsInVzZXJuYW1lIjoic3V2cGF0aWxAcmVkaWZmbWFpbC5jb20iLCJvcmdOYW1lIjoiT3JnMiIsImlhdCI6MTU5MDMyNDA3NH0.0D09jNVmF-ITOfj2Q_-VbPs84ZLX1d1UPPsw_fj5ZXo" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgzODIsInVzZXJuYW1lIjoiYmFua0BnbWFpbC5jb20iLCJvcmdOYW1lIjoiT3JnMiIsImlhdCI6MTU5NTE2MjM4Mn0.vjCwIzMhkcQ8NiuwWHZmQQzNg845UzKhHuq2ka8BR9U" \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org2.example.com"]
@@ -153,7 +153,7 @@ curl -s -X POST \
 ```
 curl -s -X POST \
   http://localhost:4000/chaincodes \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org1.example.com"],
@@ -165,7 +165,7 @@ curl -s -X POST \
 
 curl -s -X POST \
   http://localhost:4000/chaincodes \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNjAwNzQsInVzZXJuYW1lIjoic3V2cGF0aWxAcmVkaWZmbWFpbC5jb20iLCJvcmdOYW1lIjoiT3JnMiIsImlhdCI6MTU5MDMyNDA3NH0.0D09jNVmF-ITOfj2Q_-VbPs84ZLX1d1UPPsw_fj5ZXo" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgzODIsInVzZXJuYW1lIjoiYmFua0BnbWFpbC5jb20iLCJvcmdOYW1lIjoiT3JnMiIsImlhdCI6MTU5NTE2MjM4Mn0.vjCwIzMhkcQ8NiuwWHZmQQzNg845UzKhHuq2ka8BR9U" \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org2.example.com"],
@@ -177,7 +177,7 @@ curl -s -X POST \
 
 curl -s -X POST \
   http://localhost:4000/chaincodes \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org3.example.com"],
@@ -196,7 +196,7 @@ curl -s -X POST \
 ```
 curl -s -X POST \
   http://localhost:4000/channels/mychannel/chaincodes \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org1.example.com"],
@@ -214,23 +214,46 @@ This invoke request is signed by peers from both orgs, *org1* & *org2*.
 ```
 curl -s -X POST \
   http://localhost:4000/channels/mychannel/chaincodes/mycc \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.org1.example.com"],
+	"fcn":"saveCustomer",
+	"args":["{\"KycID\": \"8025924\", \"Email\": \"thakur@gmail.com\", \"CustName\": \"Suvit\", \"FamilyName\": \"Patil\", \"CurrentResidentialAddress\": \"old sangvi\", \"PermanentResidentialAddress\": \"Pune\", \"MobileNo\": \"9011454898\", \"FaxNo\": \"Jim\", \"UploadPassport\": \"\", \"UploadLicense\": \"zAGoyB47gezDlB80HFLEzg==\", \"KycStatus\": \"created\"}"]
+}'
+
+
+curl -s -X POST \
+  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org1.example.com","peer0.org2.example.com"],
 	"fcn":"saveCustomer",
-	"args":["{\"KycID\": \"8025924\", \"Email\": \"suvit_patil88@rediffmail.com\", \"CustName\": \"Suvit\", \"FamilyName\": \"Patil\", \"CurrentResidentialAddress\": \"old sangvi\", \"PermanentResidentialAddress\": \"Pune\", \"MobileNo\": \"9011454898\", \"FaxNo\": \"Jim\", \"UploadPassport\": \"\", \"UploadLicense\": \"zAGoyB47gezDlB80HFLEzg==\"}"]
+	"args":["{\"kycID\":\"1905961\",\"Email\":\"xyz_abc@gmail.com\",\"MobileNo\":{\"CountryCode\":1684,\"ContactNo\":\"898298398\"},\"FamilyName\":\"patil\",\"CustName\":\"suivt\",\"UserGengar\":\"Male\",\"UserDateOfBirth\":\"2020\",\"CurrentResidentialAddress\":{\"Address1\":\"address1\",\"Address2\":\"address2\",\"Address3\":\"address3\",\"Country\":\"Andorra\",\"State\":\"Encamp\",\"City\":\"Encamp\",\"PostalCode\":\"647474\"},\"PermanentResidentialAddress\":{\"Address1\":\"address1\",\"Address2\":\"address2\",\"Address3\":\"address3\",\"Country\":\"Andorra\",\"State\":\"Encamp\",\"City\":\"Encamp\",\"PostalCode\":\"647474\"}}"]
+}'
+```````````````````````````````
+
+curl -s -X POST \
+  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.org1.example.com", "peer0.org2.example.com"],
+	"fcn":"changeStatus",
+	"args":["1905961", "created", "thakur@gmail.com"]
 }'
 
-```
+
+````````
 **NOTE:** Ensure that you save the Transaction ID from the response in order to pass this string in the subsequent query transactions.
 
 ### Chaincode Query
 
 ```
 curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=query&args=%5B%228025924%22%5D" \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=query&args=%5B%221905961%22%5D" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json"
 ```
 {"success":true,"message":{"currentResidentialAddress":"old sangvi","custName":"Suvit","docType":"customerDetails","email":"suvit_patil88@rediffmail.com","familyName":"Patil","faxNo":"Jim","kycId":"288446","mobileNo":"9011454898","permanentResidentialAddress":"Pune","uploadLicense":"","uploadPassport":""}}
@@ -239,7 +262,7 @@ curl -s -X GET \
 ```
 curl -s -X GET \
   "http://localhost:4000/channels/mychannel/blocks/1?peer=peer0.org1.example.com" \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json"
 ```
 
@@ -247,7 +270,7 @@ curl -s -X GET \
 
 ```
 curl -s -X GET http://localhost:4000/channels/mychannel/transactions/<put transaction id here>?peer=peer0.org1.example.com \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json"
 ```
 **NOTE**: The transaction id can be from any previous invoke transaction, see results of the invoke request, will look something like `8a95b1794cb17e7772164c3f1292f8410fcfdc1943955a35c9764a21fcd1d1b3`.
@@ -258,7 +281,7 @@ curl -s -X GET http://localhost:4000/channels/mychannel/transactions/<put transa
 ```
 curl -s -X GET \
   "http://localhost:4000/channels/mychannel?peer=peer0.org1.example.com" \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json"
 ```
 
@@ -267,7 +290,7 @@ curl -s -X GET \
 ```
 curl -s -X GET \
   "http://localhost:4000/chaincodes?peer=peer0.org1.example.com&type=installed" \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json"
 ```
 
@@ -276,7 +299,7 @@ curl -s -X GET \
 ```
 curl -s -X GET \
   "http://localhost:4000/chaincodes?peer=peer0.org1.example.com&type=instantiated" \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json"
 ```
 
@@ -285,7 +308,7 @@ curl -s -X GET \
 ```
 curl -s -X GET \
   "http://localhost:4000/channels?peer=peer0.org1.example.com" \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTAzNTk3NTQsInVzZXJuYW1lIjoic3V2aXRfcGF0aWw4OEByZWRpZmZtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTkwMzIzNzU0fQ.2I51tZOMmdxSfNz-IVDyhTrG0CRzY1Un2Np21z7ZRHk" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUxOTgxNTIsInVzZXJuYW1lIjoiY2xpZW50QGdtYWlsLmNvbSIsIm9yZ05hbWUiOiJPcmcxIiwiaWF0IjoxNTk1MTYyMTUyfQ.PW4CxnkTR3g6H72_tC1TH19_X6xWgvJWbxf9TVEIqTo" \
   -H "content-type: application/json"
 ```
 
